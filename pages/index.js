@@ -4,11 +4,15 @@ import Layout from '../components/MyLayout.js'
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch'
 import withData from '../lib/withData';
+import { Button } from 'jobiqo-cl';
 
 const Index = (props) => (
   <Layout>
     <Title>Recipes Graphql</Title>
     Click on recipes above to see all recipes.
+    <Button type='primary'>
+      Default theme button
+    </Button>
   </Layout>
 )
 

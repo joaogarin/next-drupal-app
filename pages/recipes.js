@@ -3,6 +3,14 @@ import Title from '../components/Title.js';
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import withData from '../lib/withData';
+import styled, { ThemeProvider } from 'styled-components';
+import { Button } from 'jobiqo-cl';
+
+// This page has a custom theme.
+const customTheme = {
+    primary: '#413fb6',
+    secondary: '#d0378c'
+};
 
 export const allRecipes = gql`
 {
@@ -30,14 +38,19 @@ function RecipesList({
     if (allRecipes) {
         console.log('Got all recipes');
         return (
-            <Layout>
-                <Title>All Recipes</Title>
-                <ul>
-                    {nodeQuery.entities.map(recipe => (
-                        <li key={recipe.entityId}>{recipe.entityLabel}</li>
-                    ))}
-                </ul>
-            </Layout>
+            <ThemeProvider theme={customTheme}>
+                <Layout>
+                    <Title>All Recipes</Title>
+                    <Button type='primary'>
+                        Custom theme button
+                    </Button>
+                    <ul>
+                        {nodeQuery.entities.map(recipe => (
+                            <li key={recipe.entityId}>{recipe.entityLabel}</li>
+                        ))}
+                    </ul>
+                </Layout>
+            </ThemeProvider>
         )
     }
     return <div>Loading</div>
