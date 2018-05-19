@@ -58,7 +58,7 @@ function RecipesList({
 
 // The `graphql` wrapper executes a GraphQL query and makes the results
 // available on the `data` prop of the wrapped component (PostList)
-const IndexAbout = graphql(allRecipes, {
+const IndexRecipes = graphql(allRecipes, {
     options: {
         variables: {}
     },
@@ -67,4 +67,4 @@ const IndexAbout = graphql(allRecipes, {
     })
 })(RecipesList);
 
-export default withData(IndexAbout);
+export default withData(IndexRecipes);
