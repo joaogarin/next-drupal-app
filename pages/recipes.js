@@ -5,6 +5,7 @@ import gql from 'graphql-tag'
 import withData from '../lib/withData';
 import styled, { ThemeProvider } from 'styled-components';
 import { Button } from 'jobiqo-cl';
+import Link from 'next/link';
 
 // This page has a custom theme.
 const customTheme = {
@@ -14,7 +15,7 @@ const customTheme = {
 
 export const allRecipes = gql`
 {
-    nodeQuery(limit: 10, offset: 0, filter: {conditions: [{operator: EQUAL, field: "type", value: ["recipe"]}]}) {
+    nodeQuery(limit: 100, offset: 0, filter: {conditions: [{operator: EQUAL, field: "type", value: ["recipe"]}]}) {
       entities {
         entityId
         entityLabel
@@ -33,7 +34,7 @@ export const allRecipes = gql`
 `;
 
 function RecipesList({
-    data: { loading, error, nodeQuery, _allPostsMeta } }) {
+    data: { loading, error, nodeQuery, _allPostsMeta }, props }) {
     if (error) return <div message='Error loading posts.' />
     if (allRecipes) {
         console.log('Got all recipes');
@@ -46,7 +47,12 @@ function RecipesList({
                     </Button>
                     <ul>
                         {nodeQuery.entities.map(recipe => (
-                            <li key={recipe.entityId}>{recipe.entityLabel}</li>
+                            <li key={recipe.entityId}>
+                                <div>{recipe.entityLabel}</div>
+                                <Link as={`${recipe.entityUrl.path.replace('/drupal-contenta/web', '')}`} href={`/recipe?id=${recipe.entityId}`}>
+                                    <a>Read more</a>
+                                </Link>
+                            </li>
                         ))}
                     </ul>
                 </Layout>
