@@ -1,12 +1,14 @@
-import Layout from '../components/MyLayout.js'
-import Title from '../components/Title.js';
-import { graphql, Query } from 'react-apollo'
+import { graphql, Query } from 'react-apollo';
 import gql from 'graphql-tag'
 import withData from '../lib/withData';
-import styled, { ThemeProvider } from 'styled-components';
-import { Button } from 'jobiqo-cl';
 import Link from 'next/link';
+
+// Styling.
+import styled, { ThemeProvider } from 'styled-components';
+import Layout from '../components/MyLayout.js'
+import Title from '../components/Title.js';
 import theme from './../theme/theme';
+import { Button } from 'jobiqo-cl';
 
 export const GET_ALL_RECIPES = gql`
 {

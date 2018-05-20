@@ -1,13 +1,14 @@
-import fetch from 'isomorphic-unfetch';
-import Layout from '../components/MyLayout.js';
-import Title from '../components/Title.js';
-import withData from '../lib/withData';
 import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+import { graphql, Query } from 'react-apollo';
+import withData from '../lib/withData';
+
+// Styling.
 import styled, { ThemeProvider } from 'styled-components';
 import theme from './../theme/theme';
+import Layout from '../components/MyLayout.js';
+import Title from '../components/Title.js';
 
-export const recipeQuery = gql`
+export const GET_RECIPE = gql`
 query findRecipes($slug: String!) {
     route(path:$slug) {
       ... on EntityCanonicalUrl {
@@ -20,37 +21,27 @@ query findRecipes($slug: String!) {
   
 `;
 
-function RecipeDetail({
-    data: { loading, error, route, _allPostsMeta }, props }) {
-    if (error) return <div message='Error loading recipe.' />
-    if (recipeQuery) {
-        return (
-            <ThemeProvider theme={theme}>
-                <Layout>
-                    <Title>Recipe - {route.entity.entityLabel}</Title>
-                </Layout>
-            </ThemeProvider>
-        )
-    }
-    return <div>Loading</div>
-}
+const RecipeDetail = ({ slug }) => (
+    <Query query={GET_RECIPE} variables={{ slug }}>
+        {({ loading, error, data }) => {
+            if (loading) return "Loading...";
+            if (error) return `Error! ${error.message}`;
+            return (
+                <ThemeProvider theme={theme}>
+                    <Layout>
+                        <Title>Recipe - {data.route.entity.entityLabel}</Title>
+                    </Layout>
+                </ThemeProvider>
+            );
+        }}
+    </Query>
+);
 
-const IndexRecipe = graphql(recipeQuery, {
-    options: (props) => ({
-        variables: {
-            slug: props.slug
-        }
-    }),
-    props: ({ data }) => ({
-        data
-    })
-})(RecipeDetail);
-
-IndexRecipe.getInitialProps = async function (context) {
+RecipeDetail.getInitialProps = async function (context) {
     const { slug } = context.query;
     return {
         slug: `/recipe/${slug}`
     }
 }
 
-export default withData(IndexRecipe);
+export default withData(RecipeDetail);
