@@ -14,7 +14,7 @@
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
     "isomorphic-unfetch": "^2.0.0",
-    "jobiqo-cl": "^0.1.4",
+    "jobiqo-cl": "^0.1.5",
     "next": "^6.0.0",
     "react": "^16.3.2",
     "react-apollo": "^2.1.4",
