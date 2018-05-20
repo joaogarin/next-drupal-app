@@ -1,6 +1,6 @@
 import Layout from '../components/MyLayout.js'
 import Title from '../components/Title.js';
-import { graphql } from 'react-apollo'
+import { graphql, Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import withData from '../lib/withData';
 import styled, { ThemeProvider } from 'styled-components';
@@ -8,7 +8,7 @@ import { Button } from 'jobiqo-cl';
 import Link from 'next/link';
 import theme from './../theme/theme';
 
-export const allRecipes = gql`
+export const GET_ALL_RECIPES = gql`
 {
     nodeQuery(limit: 100, offset: 0, filter: {conditions: [{operator: EQUAL, field: "type", value: ["recipe"]}]}) {
       entities {
@@ -28,44 +28,39 @@ export const allRecipes = gql`
   }
 `;
 
-function RecipesList({
-    data: { loading, error, nodeQuery, _allPostsMeta }, props }) {
-    if (error) return <div message='Error loading posts.' />
-    if (allRecipes) {
-        console.log('Got all recipes');
-        return (
-            <ThemeProvider theme={theme}>
-                <Layout>
-                    <Title>All Recipes</Title>
-                    <Button type='primary'>
-                        Custom theme button
-                    </Button>
-                    <ul>
-                        {nodeQuery.entities.map(recipe => (
-                            <li key={recipe.entityId}>
-                                <div>{recipe.entityLabel}</div>
-                                <Link as={`/recipe${recipe.entityUrl.path.replace('/drupal-contenta/web/recipe', '')}`} href={`/recipe?slug=${recipe.entityUrl.path.replace('/drupal-contenta/web/recipe/', '')}`}>
-                                    <a>Read more</a>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </Layout>
-            </ThemeProvider>
-        )
-    }
-    return <div>Loading</div>
+const RecipesListing = () => (
+    <Query query={GET_ALL_RECIPES}>
+        {({ loading, error, data }) => {
+            if (loading) return "Loading...";
+            if (error) return `Error! ${error.message}`;
+            return (
+                <ul>
+                    {data.nodeQuery.entities.map(recipe => (
+                        <li key={recipe.entityId}>
+                            <div>{recipe.entityLabel}</div>
+                            <Link as={`/recipe${recipe.entityUrl.path.replace('/drupal-contenta/web/recipe', '')}`} href={`/recipe?slug=${recipe.entityUrl.path.replace('/drupal-contenta/web/recipe/', '')}`}>
+                                <a>Read more</a>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            );
+        }}
+    </Query>
+);
+
+const RecipesList = () => {
+    return (
+        <ThemeProvider theme={theme}>
+            <Layout>
+                <Title>All Recipes</Title>
+                <Button type='primary'>
+                    Custom theme button
+                </Button>
+                <RecipesListing />
+            </Layout>
+        </ThemeProvider>
+    )
 }
 
-// The `graphql` wrapper executes a GraphQL query and makes the results
-// available on the `data` prop of the wrapped component (PostList)
-const IndexRecipes = graphql(allRecipes, {
-    options: {
-        variables: {}
-    },
-    props: ({ data }) => ({
-        data
-    })
-})(RecipesList);
-
-export default withData(IndexRecipes);
+export default withData(RecipesList);
