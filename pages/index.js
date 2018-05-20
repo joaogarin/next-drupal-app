@@ -10,9 +10,6 @@ const Index = (props) => (
   <Layout>
     <Title>Recipes Graphql</Title>
     Click on recipes above to see all recipes.
-    <Button type='primary'>
-      Default theme button
-    </Button>
   </Layout>
 )
 

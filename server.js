@@ -10,6 +10,9 @@ app.prepare()
         const server = express()
 
         server.get('/recipe/:slug', (req, res) => {
+            // I coulde have a generic get for :slug and check via graphql here 
+            // the entity associated and map to the component, however for consistency its good to rely on 
+            // specific paths for some content types like jobs / recipes etc and landing pages allow more control over routing..
             const actualPage = '/recipe'
             const queryParams = { slug: req.params.slug }
             app.render(req, res, actualPage, queryParams)
