@@ -6,12 +6,7 @@ import withData from '../lib/withData';
 import styled, { ThemeProvider } from 'styled-components';
 import { Button } from 'jobiqo-cl';
 import Link from 'next/link';
-
-// This page has a custom theme.
-const customTheme = {
-    primary: '#413fb6',
-    secondary: '#d0378c'
-};
+import theme from './../theme/theme';
 
 export const allRecipes = gql`
 {
@@ -39,7 +34,7 @@ function RecipesList({
     if (allRecipes) {
         console.log('Got all recipes');
         return (
-            <ThemeProvider theme={customTheme}>
+            <ThemeProvider theme={theme}>
                 <Layout>
                     <Title>All Recipes</Title>
                     <Button type='primary'>

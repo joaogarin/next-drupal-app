@@ -5,6 +5,7 @@ import withData from '../lib/withData';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import styled, { ThemeProvider } from 'styled-components';
+import theme from './../theme/theme';
 
 export const recipeQuery = gql`
 query findRecipes($slug: String!) {
@@ -19,18 +20,12 @@ query findRecipes($slug: String!) {
   
 `;
 
-// Move this outside.
-const customTheme = {
-    primary: '#413fb6',
-    secondary: '#d0378c'
-};
-
 function RecipeDetail({
     data: { loading, error, route, _allPostsMeta }, props }) {
     if (error) return <div message='Error loading recipe.' />
     if (recipeQuery) {
         return (
-            <ThemeProvider theme={customTheme}>
+            <ThemeProvider theme={theme}>
                 <Layout>
                     <Title>Recipe - {route.entity.entityLabel}</Title>
                 </Layout>
