@@ -36,7 +36,7 @@ function RecipeDetail({
 }
 
 const IndexRecipe = graphql(recipeQuery, {
-    options: (props) => (console.log(props), {
+    options: (props) => ({
         variables: {
             slug: props.slug
         }
@@ -48,7 +48,6 @@ const IndexRecipe = graphql(recipeQuery, {
 
 IndexRecipe.getInitialProps = async function (context) {
     const { slug } = context.query;
-    console.log('Param id for recipe - ', slug);
     return {
         slug: `/recipe/${slug}`
     }
