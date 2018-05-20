@@ -1,17 +1,62 @@
 import fetch from 'isomorphic-unfetch';
 import Layout from '../components/MyLayout.js';
 import Title from '../components/Title.js';
+import withData from '../lib/withData';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
+import styled, { ThemeProvider } from 'styled-components';
 
-const RecipeDetail = (props) => (
-    <Layout>
-        <Title>Name here</Title>
-    </Layout>
-)
+export const recipeQuery = gql`
+query findRecipes($slug: String!) {
+    route(path:$slug) {
+      ... on EntityCanonicalUrl {
+        entity {
+          entityLabel
+        }
+      }
+    }
+  }
+  
+`;
 
-RecipeDetail.getInitialProps = async function (context) {
-    const { id } = context.query;
-    console.log('Param id for recipe - ' , id);
-    return {}
+// Move this outside.
+const customTheme = {
+    primary: '#413fb6',
+    secondary: '#d0378c'
+};
+
+function RecipeDetail({
+    data: { loading, error, route, _allPostsMeta }, props }) {
+    if (error) return <div message='Error loading recipe.' />
+    if (recipeQuery) {
+        return (
+            <ThemeProvider theme={customTheme}>
+                <Layout>
+                    <Title>Recipe - {route.entity.entityLabel}</Title>
+                </Layout>
+            </ThemeProvider>
+        )
+    }
+    return <div>Loading</div>
 }
 
-export default RecipeDetail;
+const IndexRecipe = graphql(recipeQuery, {
+    options: (props) => (console.log(props), {
+        variables: {
+            slug: props.slug
+        }
+    }),
+    props: ({ data }) => ({
+        data
+    })
+})(RecipeDetail);
+
+IndexRecipe.getInitialProps = async function (context) {
+    const { slug } = context.query;
+    console.log('Param id for recipe - ', slug);
+    return {
+        slug: `/recipe/${slug}`
+    }
+}
+
+export default withData(IndexRecipe);

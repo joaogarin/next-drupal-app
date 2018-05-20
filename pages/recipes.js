@@ -49,7 +49,7 @@ function RecipesList({
                         {nodeQuery.entities.map(recipe => (
                             <li key={recipe.entityId}>
                                 <div>{recipe.entityLabel}</div>
-                                <Link as={`${recipe.entityUrl.path.replace('/drupal-contenta/web', '')}`} href={`/recipe?id=${recipe.entityId}`}>
+                                <Link as={`/recipe${recipe.entityUrl.path.replace('/drupal-contenta/web/recipe', '')}`} href={`/recipe?slug=${recipe.entityUrl.path.replace('/drupal-contenta/web/recipe/', '')}`}>
                                     <a>Read more</a>
                                 </Link>
                             </li>

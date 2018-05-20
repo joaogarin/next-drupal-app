@@ -9,10 +9,9 @@ app.prepare()
     .then(() => {
         const server = express()
 
-        server.get('/recipe/:id', (req, res) => {
+        server.get('/recipe/:slug', (req, res) => {
             const actualPage = '/recipe'
-            // Get the right id / entity from the server otherwise it will pass the last query string.
-            const queryParams = { id: req.params.id }
+            const queryParams = { slug: req.params.slug }
             app.render(req, res, actualPage, queryParams)
         })
 
